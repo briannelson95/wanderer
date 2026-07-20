@@ -160,31 +160,33 @@
             <h4 class="font-semibold text-lg line-clamp-2 wrap-anywhere">
                 {trail.name}
             </h4>
-            {#if trail.date}
-                <p class="text-xs text-gray-500 mb-3">
-                    {new Date(trail.date).toLocaleDateString(undefined, {
-                        month: "long",
-                        day: "2-digit",
-                        year: "numeric",
-                        timeZone: "UTC",
-                    })}
-                </p>
-            {/if}
-            {#if trail.expand?.author}
-                <p class="text-xs text-gray-500 mb-3">
-                    {$_("by")}
-                    <img
-                        class="rounded-full w-5 aspect-square mx-1 inline"
-                        src={trail.expand.author.icon ||
-                            `https://api.dicebear.com/7.x/initials/svg?seed=${trail.expand.author.preferred_username}&backgroundType=gradientLinear`}
-                        alt="avatar"
-                    />
-                    {trail.expand.author.preferred_username}{trail.expand.author
-                        .is_local
-                        ? ""
-                        : "@" + trail.expand.author.domain}
-                </p>
-            {/if}
+            <div class="flex gap-4 my-2">
+                {#if trail.date}
+                    <p class="text-xs text-gray-500 mb-3">
+                        {new Date(trail.date).toLocaleDateString(undefined, {
+                            month: "long",
+                            day: "2-digit",
+                            year: "numeric",
+                            timeZone: "UTC",
+                        })}
+                    </p>
+                {/if}
+                {#if trail.expand?.author}
+                    <p class="text-xs text-gray-500 mb-3">
+                        {$_("by")}
+                        <img
+                            class="rounded-full w-5 aspect-square mx-1 inline"
+                            src={trail.expand.author.icon ||
+                                `https://api.dicebear.com/7.x/initials/svg?seed=${trail.expand.author.preferred_username}&backgroundType=gradientLinear`}
+                            alt="avatar"
+                        />
+                        {trail.expand.author.preferred_username}{trail.expand.author
+                            .is_local
+                            ? ""
+                            : "@" + trail.expand.author.domain}
+                    </p>
+                {/if}
+            </div>
             {#if trail.tags.length}
                 <div class="flex flex-wrap gap-1 mb-3 items-center">
                     {#each expandedTags ? trail.tags : trail.tags.slice(0, 2) as t}
@@ -207,41 +209,44 @@
                 </div>
             {/if}
             <div class="flex gap-x-4 gap-y-1 text-base flex-wrap">
-                {#if trail.expand?.category?.name || trail.category}
-                    <p>
-                        <span class="relative mr-3 inline-block w-4 text-center">
-                            <i class="fa {displayTrailCategoryIcon(trail)}"></i>
-                            {#if displayTrailCategoryBadgeIcon(trail)}
-                                <i
-                                    class="fa {displayTrailCategoryBadgeIcon(
-                                        trail,
-                                    )} absolute -right-1 -top-1 text-[8px]"
-                                ></i>
+                <div class="flex gap-4">
+                    {#if trail.expand?.category?.name || trail.category}
+                        <p>
+                            <span class="relative mr-3 inline-block w-4 text-center">
+                                <i class="fa {displayTrailCategoryIcon(trail)}"></i>
+                                {#if displayTrailCategoryBadgeIcon(trail)}
+                                    <i
+                                        class="fa {displayTrailCategoryBadgeIcon(
+                                            trail,
+                                        )} absolute -right-1 -top-1 text-[8px]"
+                                    ></i>
+                                {/if}
+                            </span>{displayCategoryName(
+                                trail.expand?.category ?? { name: trail.category ?? "" },
+                                $locale,
+                            ) || "-"}
+                            {#if trail.expand?.subcategory}
+                                <span class="text-gray-500">
+                                    / {displaySubcategoryLabel(
+                                        trail.expand.subcategory,
+                                        $locale,
+                                    )}
+                                </span>
                             {/if}
-                        </span>{displayCategoryName(
-                            trail.expand?.category ?? { name: trail.category ?? "" },
-                            $locale,
-                        ) || "-"}
-                        {#if trail.expand?.subcategory}
-                            <span class="text-gray-500">
-                                / {displaySubcategoryLabel(
-                                    trail.expand.subcategory,
-                                    $locale,
-                                )}
-                            </span>
-                        {/if}
+                        </p>
+                    {/if}
+                    <p class="whitespace-nowrap">
+                        <i class="fa fa-gauge mr-3"></i>{$_(
+                            trail.difficulty ?? "?",
+                        )}
                     </p>
-                {/if}
+                </div>
                 {#if trail.location}
-                    <p>
+                    <p class="text-sm text-gray-500">
                         <i class="fa fa-location-dot mr-3"></i>{trail.location}
                     </p>
                 {/if}
-                <p class="whitespace-nowrap">
-                    <i class="fa fa-gauge mr-3"></i>{$_(
-                        trail.difficulty ?? "?",
-                    )}
-                </p>
+
             </div>
         </div>
         <div
@@ -257,7 +262,7 @@
                     trail.duration,
                 )}</span
             >
-            <span
+            <!-- <span
                 ><i class="fa fa-arrow-trend-up mr-2"></i>{formatElevation(
                     trail.elevation_gain,
                 )}</span
@@ -266,7 +271,7 @@
                 ><i class="fa fa-arrow-trend-down mr-2"></i>{formatElevation(
                     trail.elevation_loss,
                 )}</span
-            >
+            > -->
         </div>
     </div>
 </div>
